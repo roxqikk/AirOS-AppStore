@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "themes": [
+    {
+      "id": "violet",
+      "name": "AirOS Violet",
+      "file": "violet.json"
+    },
+    {
+      "id": "ocean",
+      "name": "Ocean Blue",
+      "file": "ocean.json"
+    },
+    {
+      "id": "classic",
+      "name": "iOS 6 Classic",
+      "file": "classic.json"
+    }
+  ]
+}
