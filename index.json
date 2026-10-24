@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "apps": [
+    {
+      "id": "flappybird",
+      "name": "Flappy Bird",
+      "file": "flappybird.js",
+      "icon": "bird",
+      "cover": "Flappy Bird",
+      "type": "game",
+      "description": "Tap to fly; play on CYD."
+    },
+    {
+      "id": "themes",
+      "name": "Themes",
+      "file": "themes/index.json",
+      "icon": "palette",
+      "type": "themes",
+      "description": "Choose your favorite AirOS look."
+    }
+  ]
+}
