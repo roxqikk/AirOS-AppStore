@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GameBOX App Store</title>
+<style>
+:root{color-scheme:dark;font:16px system-ui}body{margin:0;background:#090f19;color:#e8f5ec}
+main{max-width:690px;margin:auto;padding:24px}h1{color:#7dfda2}small{color:#95b6a5}
+#status{padding:12px 0;color:#b0c5b9}.app{display:flex;align-items:center;justify-content:space-between;
+gap:12px;background:#172d25;padding:16px;border-radius:15px;margin:12px 0}
+button,a.install{color:#08180d;background:#77e6a0;border:0;padding:10px 14px;border-radius:9px;
+font-weight:700;text-decoration:none;cursor:pointer}.name{overflow-wrap:anywhere}
+</style>
+<main><h1>◈ GameBOX App Store</h1><p>Только настоящие JavaScript-файлы из GitHub.</p>
+<button id="reload">Обновить</button><div id="status">Загрузка...</div><section id="apps"></section>
+<small>Файлы скачиваются как .js. Для запуска на ESP32 нужен встроенный JS-движок GameBOX и совместимый API.</small></main>
+<script>
+const owner='roxqikk',repo='AirOS-AppStore',branch='main';
+const api='https://api.github.com/repos/'+owner+'/'+repo+'/git/trees/'+branch+'?recursive=1';
+const raw='https://raw.githubusercontent.com/'+owner+'/'+repo+'/'+branch+'/';
+const apps=document.querySelector('#apps'),status=document.querySelector('#status');
+const names={};
+async function load(){
+ apps.replaceChildren(); status.textContent='Проверяем файлы GitHub...';
+ try{
+  const res=await fetch(api,{headers:{Accept:'application/vnd.github+json'},cache:'no-store'});
+  if(!res.ok)throw Error('GitHub HTTP '+res.status);
+  const data=await res.json();
+  if(data.truncated)throw Error('Список GitHub неполный');
+  const files=data.tree.filter(f=>f.type==='blob'&&/^apps\/[a-zA-Z0-9_-]+\.js$/.test(f.path));
+  status.textContent='Найдено приложений: '+files.length;
+  if(!files.length)status.textContent+=' — добавьте .js в apps/';
+  files.forEach(file=>{
+    const article=document.createElement('article');article.className='app';
+    const label=document.createElement('span');label.className='name';
+    label.textContent=file.path.slice(5,-3).replaceAll('_',' ');
+    const link=document.createElement('a');link.className='install';link.textContent='Скачать';
+    link.href=raw+file.path;link.target='_blank';link.rel='noopener noreferrer';
+    article.append(label,link);apps.append(article);
+  });
+ }catch(e){status.textContent='Ошибка загрузки: '+e.message;}
+}
+document.querySelector('#reload').addEventListener('click',load);load();
+</script></html>
